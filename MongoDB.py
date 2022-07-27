@@ -3,10 +3,11 @@ import pprint
 # Creating instance of mongoclient
 client = MongoClient()
 # Creating database
-def InsertarTemperatura(ciudad,horario,temperatura):
+def InsertarDato(ciudad,horario,dato,valor):
     db = client.temperatura
     Datos = {"Ciudad": ciudad,
-    "Temperatura": temperatura,
+    "Datos": dato,
+    "Valor": valor,
     "Horario": horario
     }
     # Creating document
