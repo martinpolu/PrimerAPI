@@ -2,18 +2,17 @@ import requests
 import datetime
 import re
 from bs4 import BeautifulSoup
-from CodigoCiudades import Ciudades
+from CodigoCiudades import ListCities
 
 
 def ObtenerTemperatura(Ciudad):
-    x = requests.get(Ciudades[Ciudad])
+    x = requests.get(ListCities[Ciudad])
     soup = BeautifulSoup(x.text, "html.parser")
     TablaDatos = soup.find_all("div", {"class": "nota1 ea"})
-    texto=(TablaDatos[0].text)
+    texto=(TablaDatos[0].text) #Find text with temp,hum and pres.
     Temperatura=float(re.findall("^[0-9.]+", texto, re.MULTILINE)[0])
     HoraRegistro=int(re.findall("[0-9]+.?(?= hs)", texto, re.MULTILINE)[0])
-    print(HoraRegistro)
-    if datetime.datetime.now().hour>HoraRegistro:#Verificamos si la hora es del día anterior.
+    if datetime.datetime.now().hour>HoraRegistro: #Check if values it´s from today.
         FechaRegistro=datetime.datetime.now()
         FechaRegistro=FechaRegistro.replace(hour=HoraRegistro, minute=0, second=0, microsecond=0)
     else:
@@ -23,14 +22,13 @@ def ObtenerTemperatura(Ciudad):
 
 
 def ObtenerHumedad(Ciudad):
-    x = requests.get(Ciudades[Ciudad])
-    #print(x.text)
+    x = requests.get(ListCities[Ciudad])
     soup = BeautifulSoup(x.text, "html.parser")
     TablaDatos = soup.find_all("div",{"class":"nota1 ea"})
-    texto=(TablaDatos[0].text)
+    texto=(TablaDatos[0].text) #Find text with temp,hum and pres.
     Humedad=float(re.findall("(?<=Humedad: ).[0-9]", texto, re.MULTILINE)[0])
     HoraRegistro=int(re.findall("[0-9]+.?(?= hs)", texto, re.MULTILINE)[0])
-    if datetime.datetime.now().hour>HoraRegistro: #Verificamos si la hora es del día anterior.
+    if datetime.datetime.now().hour>HoraRegistro: #Check if values it´s from today.
         FechaRegistro=datetime.datetime.now()
         FechaRegistro=FechaRegistro.replace(hour=HoraRegistro, minute=0, second=0, microsecond=0)
     else:
@@ -40,14 +38,13 @@ def ObtenerHumedad(Ciudad):
 
 
 def ObtenerPresion(Ciudad):
-    x = requests.get(Ciudades[Ciudad]) #Hacemos el get para obtener el json completo
+    x = requests.get(ListCities[Ciudad]) #Find text with temp,hum and pres.
     soup = BeautifulSoup(x.text, "html.parser")
     TablaDatos = soup.find_all("div",{"class":"nota1 ea"})
     texto = (TablaDatos[0].text)
-    print(texto)
     Presion = float(re.findall("(?<=Presión: ).[0-9.]+", texto, re.MULTILINE)[0])
     HoraRegistro = int(re.findall("[0-9]+.?(?= hs)", texto, re.MULTILINE)[0])
-    if datetime.datetime.now().hour>HoraRegistro: #Verificamos si la hora es del día anterior.
+    if datetime.datetime.now().hour>HoraRegistro: #Check if values it´s from today.
         FechaRegistro=datetime.datetime.now()
         FechaRegistro=FechaRegistro.replace(hour=HoraRegistro, minute=0, second=0, microsecond=0)
     else:
@@ -55,4 +52,3 @@ def ObtenerPresion(Ciudad):
         FechaRegistro=FechaRegistro.replace(hour=HoraRegistro, minute=0, second=0, microsecond=0)
 
     return({"Ciudad":Ciudad,"Presion":Presion,"Horario":FechaRegistro.strftime("%s")})
-
