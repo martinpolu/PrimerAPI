@@ -2,3 +2,5 @@ uvicorn
 requests
 pymongo
 fastapi
+beautifulsoup4
+python-multipart
