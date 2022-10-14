@@ -20,24 +20,24 @@ def ConsultarFechaUltimoDato(CodCity):
     return 0
 
 
-
-while(True):
-    for Codigos in ListCities:
-        r = requests.get("http://127.0.0.1:50000/Temperatura/?CodCiu="+Codigos)
-        res = json.loads(r.text) #Convert text to dict.
-        UltimoHorario=ConsultarFechaUltimoDato(Codigos)
-        if res["Horario"]!=UltimoHorario:
-            datos={'Ciudad':res["Ciudad"],'Dato':'Temperatura','Valor':res["Temperatura"],"Horario":res["Horario"]}
-            r = requests.post("http://127.0.0.1:50000/CargarDatos/",data=datos)
-            r = requests.get("http://127.0.0.1:50000/Humedad/?CodCiu="+Codigos)
-            res = json.loads(r.text)
-            datos={'Ciudad':res["Ciudad"],'Dato':'Humedad','Valor':res["Humedad"],"Horario":res["Horario"]}
-            r = requests.post("http://127.0.0.1:50000/CargarDatos/",data=datos)
-            r = requests.get("http://127.0.0.1:50000/Presion/?CodCiu="+Codigos)
-            res = json.loads(r.text)
-            datos={'Ciudad':res["Ciudad"],'Dato':'Presion','Valor':res["Presion"],"Horario":res["Horario"]}
-            r = requests.post("http://127.0.0.1:50000/CargarDatos/",data=datos)
-        else:
-            print("mismo dato")
-    time.sleep(120)
+def GenerateRequest():
+    while(True):
+        for Codigos in ListCities:
+            r = requests.get("http://127.0.0.1:50000/Temperatura/?CodCiu="+Codigos)
+            res = json.loads(r.text) #Convert text to dict.
+            UltimoHorario=ConsultarFechaUltimoDato(Codigos)
+            if res["Horario"]!=UltimoHorario:
+                datos={'Ciudad':res["Ciudad"],'Dato':'Temperatura','Valor':res["Temperatura"],"Horario":res["Horario"]}
+                r = requests.post("http://127.0.0.1:50000/CargarDatos/",data=datos)
+                r = requests.get("http://127.0.0.1:50000/Humedad/?CodCiu="+Codigos)
+                res = json.loads(r.text)
+                datos={'Ciudad':res["Ciudad"],'Dato':'Humedad','Valor':res["Humedad"],"Horario":res["Horario"]}
+                r = requests.post("http://127.0.0.1:50000/CargarDatos/",data=datos)
+                r = requests.get("http://127.0.0.1:50000/Presion/?CodCiu="+Codigos)
+                res = json.loads(r.text)
+                datos={'Ciudad':res["Ciudad"],'Dato':'Presion','Valor':res["Presion"],"Horario":res["Horario"]}
+                r = requests.post("http://127.0.0.1:50000/CargarDatos/",data=datos)
+            else:
+                print("mismo dato")
+        time.sleep(120)
 
